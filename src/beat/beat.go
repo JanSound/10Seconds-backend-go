@@ -7,27 +7,26 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gin-gonic/gin"
 
-	// "log"
 	"fmt"
+	"os"
 	"time"
 )
 
 func GeneratePresignedURL(c *gin.Context) {
-	// awsAccessKey := "AKIASHYUGCC5FXHHOLBE"
-	// awsSecretKey := "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"
-
 	region := "ap-northeast-2"
 	bucket := "tenseconds"
 	objectKey := "tenseconds-demo"
 
 	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String(region),
-		Credentials: credentials.NewSharedCredentials("", "tenseconds"),
+		Region: aws.String(region),
+		Credentials: credentials.NewStaticCredentials(
+			os.Getenv("aws_access_key_id"), os.Getenv("aws_secret_access_key"), "",
+		),
 	})
 
 	if err != nil {
 		c.JSON(500, gin.H{
-			"error": fmt.Sprintf("Faeild to create session: %v", err),
+			"error": fmt.Sprintf("Failed to create session: %v", err),
 		})
 		return
 	}

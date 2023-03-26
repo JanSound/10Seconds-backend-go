@@ -7,6 +7,9 @@
 *.dll
 *.so
 *.dylib
+*.pdb
+*.manifest
+*.cache
 
 # Test binary, built with `go test -c`
 *.test
@@ -21,3 +24,5 @@
 go.work
 
 .env
+.vscode
+__debug_bin

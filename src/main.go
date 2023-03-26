@@ -1,14 +1,20 @@
 package main
 
 import (
+	"log"
+
 	"github.com/JanSound/10Seconds-backend-go/beat"
 	"github.com/gin-gonic/gin"
-	// "log"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Initialize a session in us-west-2 that the SDK will use to load
-	// credentials from the shared credentials file ~/.aws/credentials.
+	// .env 파일을 읽어서 환경변수를 설정
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	r := gin.Default()
 	r.GET("/generate-presigned-url", beat.GeneratePresignedURL)
 
