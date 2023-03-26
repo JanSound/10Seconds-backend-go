@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gin-gonic/gin"
 
+	// swagger embed files
 	"fmt"
 	"math/rand"
 	"os"
@@ -21,6 +22,10 @@ func generateUniqueFilename() string {
 	return fmt.Sprintf("%s-%d", now.Format("20060102150405"), randomNumber)
 }
 
+// @Schemes
+// @Description create presigned url to upload beats (m4a audio file)
+// @Tags beats
+// @Router /beats/generate-presigned-url [post]
 func GeneratePresignedURL(c *gin.Context) {
 	region := "ap-northeast-2"
 	bucket := "tenseconds"
