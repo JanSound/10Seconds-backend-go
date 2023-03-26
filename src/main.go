@@ -12,7 +12,7 @@ func main() {
 	// .env 파일을 읽어서 환경변수를 설정
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env5 file")
 	}
 
 	r := gin.Default()

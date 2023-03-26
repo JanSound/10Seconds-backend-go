@@ -8,14 +8,25 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"fmt"
+	"math/rand"
 	"os"
 	"time"
 )
 
+func generateUniqueFilename() string {
+	now := time.Now()
+	rand.Seed(now.UnixNano())
+	randomNumber := rand.Intn(1000000000)
+
+	return fmt.Sprintf("%s-%d", now.Format("20060102150405"), randomNumber)
+}
+
 func GeneratePresignedURL(c *gin.Context) {
 	region := "ap-northeast-2"
 	bucket := "tenseconds"
-	objectKey := "tenseconds-demo"
+	file_root := "tenseconds-demo/"
+	objectKey := file_root + generateUniqueFilename() + ".m4a"
+	fmt.Println(objectKey)
 
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(region),
