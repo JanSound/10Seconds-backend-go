@@ -46,9 +46,9 @@ func GeneratePresignedURL(c *gin.Context) {
 	expiration := 180 * time.Minute // 서비스화 할 경우 조정할 예정
 
 	req, _ := svc.PutObjectRequest(&s3.PutObjectInput{
-		Bucket:      aws.String(bucket),
-		Key:         aws.String(objectKey),
-		ContentType: aws.String("audio/x-m4a"), // or "audio/x-m4a"
+		Bucket: aws.String(bucket),
+		Key:    aws.String(objectKey),
+		// ContentType: aws.String("audio/x-m4a"), // or "audio/x-m4a"
 	})
 	presignedURL, err := req.Presign(expiration)
 
