@@ -12,5 +12,5 @@ func main() {
 	r := gin.Default()
 	r.GET("/generate-presigned-url", beat.GeneratePresignedURL)
 
-	r.Run()
+	r.Run(":8001")
 }
