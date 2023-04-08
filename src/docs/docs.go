@@ -25,6 +25,22 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/beats": {
+            "get": {
+                "description": "create beat",
+                "tags": [
+                    "beats"
+                ],
+                "responses": {}
+            },
+            "post": {
+                "description": "create beat",
+                "tags": [
+                    "beats"
+                ],
+                "responses": {}
+            }
+        },
         "/beats/generate-presigned-url": {
             "post": {
                 "description": "create presigned url to upload beats (m4a audio file)",

@@ -27,9 +27,9 @@ func generateUniqueFilename() string {
 // @Tags beats
 // @Router /beats/generate-presigned-url [post]
 func GeneratePresignedURL(c *gin.Context) {
-	region := "ap-northeast-2"
-	bucket := "tenseconds"
-	file_root := "tenseconds-demo/"
+	region := os.Getenv("aws_s3_region")
+	bucket := os.Getenv("aws_s3_bucket")
+	file_root := os.Getenv("aws_s3_file_root")
 	objectKey := file_root + generateUniqueFilename() + ".m4a"
 	fmt.Println(objectKey)
 
@@ -66,5 +66,25 @@ func GeneratePresignedURL(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"presigned_url": presignedURL,
+	})
+}
+
+// @Schemes
+// @Description create beat
+// @Tags beats
+// @Router /beats [post]
+func Post(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "pong",
+	})
+}
+
+// @Schemes
+// @Description create beat
+// @Tags beats
+// @Router /beats [get]
+func Get(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "pong",
 	})
 }

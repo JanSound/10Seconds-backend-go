@@ -47,6 +47,8 @@ func main() {
 		eg := v1.Group("beats")
 		{
 			eg.POST("generate-presigned-url", beat.GeneratePresignedURL)
+			eg.POST("", beat.Post)
+			eg.POST("", beat.Get)
 		}
 	}
 

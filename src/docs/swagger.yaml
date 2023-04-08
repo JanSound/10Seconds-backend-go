@@ -15,6 +15,17 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
+  /beats:
+    get:
+      description: create beat
+      responses: {}
+      tags:
+      - beats
+    post:
+      description: create beat
+      responses: {}
+      tags:
+      - beats
   /beats/generate-presigned-url:
     post:
       description: create presigned url to upload beats (m4a audio file)
