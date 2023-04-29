@@ -27,3 +27,5 @@ go.work
 .vscode
 __debug_bin
 .DS_Store
+
+.aws
