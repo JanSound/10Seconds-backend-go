@@ -22,16 +22,30 @@ func generateUniqueFilename() string {
 	return fmt.Sprintf("%s-%d", now.Format("20060102150405"), randomNumber)
 }
 
+func generatePutObjectPresignedURL(sess *session.Session, content_type string, objectKey string) (string, error) {
+	svc := s3.New(sess)
+	expiration := 180 * time.Minute // 서비스화 할 경우 조정할 예정
+
+	bucket := os.Getenv("aws_s3_bucket")
+
+	req, _ := svc.PutObjectRequest(&s3.PutObjectInput{
+		Bucket:      aws.String(bucket),
+		Key:         aws.String(objectKey),
+		ContentType: aws.String(content_type),
+		// ContentType: aws.String("audio/x-m4a"), // or "audio/x-m4a"
+	})
+	presignedURL, err := req.Presign(expiration)
+	return presignedURL, err
+}
+
 // @Schemes
 // @Description create presigned url to upload beats (m4a audio file)
 // @Tags beats
 // @Router /beats/generate-presigned-url [post]
-func GeneratePresignedURL(c *gin.Context) {
+func GeneratePutObjectPresignedURL(c *gin.Context) {
 	region := os.Getenv("aws_s3_region")
-	bucket := os.Getenv("aws_s3_bucket")
 	file_root := os.Getenv("aws_s3_file_root")
 	objectKey := file_root + generateUniqueFilename() + ".m4a"
-	fmt.Println(objectKey)
 
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(region),
@@ -39,23 +53,13 @@ func GeneratePresignedURL(c *gin.Context) {
 			os.Getenv("aws_access_key_id"), os.Getenv("aws_secret_access_key"), "",
 		),
 	})
-
 	if err != nil {
 		c.JSON(500, gin.H{
 			"error": fmt.Sprintf("Failed to create session: %v", err),
 		})
 		return
 	}
-
-	svc := s3.New(sess)
-	expiration := 180 * time.Minute // 서비스화 할 경우 조정할 예정
-
-	req, _ := svc.PutObjectRequest(&s3.PutObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(objectKey),
-		// ContentType: aws.String("audio/x-m4a"), // or "audio/x-m4a"
-	})
-	presignedURL, err := req.Presign(expiration)
+	presignedURL, err := generatePutObjectPresignedURL(sess, "audio/x-m4a", objectKey)
 
 	if err != nil {
 		c.JSON(500, gin.H{
