@@ -44,13 +44,18 @@ func main() {
 
 	v1 := r.Group("api/v1")
 	{
-		eg := v1.Group("beats")
+		beats := v1.Group("beats")
 		{
-			eg.POST("generate-presigned-url", beat.GeneratePutObjectPresignedURL)
-			eg.POST("", beat.PostBeat)
-			eg.GET("", beat.GetBeatList)
-			eg.GET(":beat_id", beat.GetBeatDetail)
-			eg.DELETE(":beat_id", beat.DeleteBeat)
+			presigned_url := beats.Group("presigned-url")
+			{
+				presigned_url.POST("put/", beat.GeneratePutObjectPresignedURL)
+				presigned_url.POST("get/", beat.GenerateGetObjectPresignedUrl)
+			}
+
+			beats.POST("", beat.PostBeat)
+			beats.GET("", beat.GetBeatList)
+			beats.GET(":beat_id", beat.GetBeatDetail)
+			beats.DELETE(":beat_id", beat.DeleteBeat)
 		}
 	}
 

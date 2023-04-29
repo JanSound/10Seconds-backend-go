@@ -22,6 +22,10 @@ type Presigner struct {
 	PresignClient *s3.PresignClient
 }
 
+type Payload struct {
+	Key string
+}
+
 func (presigner Presigner) GetObject(
 	bucketName string, objectKey string, lifetimeSecs int64) (*v4.PresignedHTTPRequest, error) {
 	request, err := presigner.PresignClient.PresignGetObject(context.TODO(), &s3.GetObjectInput{
@@ -60,28 +64,12 @@ func generateUniqueFilename() string {
 	return fmt.Sprintf("%s-%d", now.Format("20060102150405"), randomNumber)
 }
 
-// func generatePutObjectPresignedURL(sess *session.Session, content_type string, objectKey string) (string, error) {
-// 	svc := s3.New(sess)
-// 	expiration := 180 * time.Minute // 서비스화 할 경우 조정할 예정
-
-// 	bucket := os.Getenv("aws_s3_bucket")
-
-// 	req, _ := svc.PutObjectRequest(&s3.PutObjectInput{
-// 		Bucket:      aws.String(bucket),
-// 		Key:         aws.String(objectKey),
-// 		ContentType: aws.String(content_type),
-// 		// ContentType: aws.String("audio/x-m4a"), // or "audio/x-m4a"
-// 	})
-// 	presignedURL, err := req.Presign(expiration)
-// 	return presignedURL, err
-// }
-
 // @Schemes
-// @Description create presigned url to upload beats (m4a audio file)
+// @Description create presigned url to download beats (m4a audio file)
 // @Tags beats
-// @Router /beats/generate-presigned-url [post]
-func GeneratePutObjectPresignedURL(c *gin.Context) {
-
+// @Param body body Payload true "구하려는 파일의 key 를 넣어주세요."
+// @Router /beats/presigned-url/get [post]
+func GenerateGetObjectPresignedUrl(c *gin.Context) {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
 		config.WithSharedConfigProfile("tenseconds"),
@@ -91,14 +79,47 @@ func GeneratePutObjectPresignedURL(c *gin.Context) {
 	if err != nil {
 		return
 	}
+	var payload Payload
+	c.ShouldBind(&payload)
+	fileKey := payload.Key
+
 	client := s3.NewFromConfig(cfg)
+	bucket := os.Getenv("aws_s3_bucket")
+
 	presignClient := s3.NewPresignClient(client)
 	presigner := Presigner{PresignClient: presignClient}
+
+	presignedGetRequest, err := presigner.GetObject(bucket, fileKey, 60)
+	presignedURL := presignedGetRequest.URL
+	c.JSON(200, gin.H{
+		"presigned_url": presignedURL,
+	})
+}
+
+// @Schemes
+// @Description create presigned url to upload beats (m4a audio file)
+// @Tags beats
+// @Router /beats/presigned-url/post [post]
+func GeneratePutObjectPresignedURL(c *gin.Context) {
+	cfg, err := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithSharedConfigProfile("tenseconds"),
+		config.WithRegion("ap-northeast-2"),
+	)
+
+	if err != nil {
+		return
+	}
+
 	bucket := os.Getenv("aws_s3_bucket")
 	file_root := os.Getenv("aws_s3_file_root")
 	objectKey := file_root + generateUniqueFilename() + ".m4a"
+
+	client := s3.NewFromConfig(cfg)
+	presignClient := s3.NewPresignClient(client)
+	presigner := Presigner{PresignClient: presignClient}
 	presignedPutRequest, err := presigner.PutObject(bucket, objectKey, 60)
-	fmt.Printf(presignedPutRequest.URL)
+
 	if err != nil {
 		panic(err)
 	}

@@ -1,4 +1,10 @@
 basePath: /api/v1
+definitions:
+  beat.Payload:
+    properties:
+      filename:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -26,7 +32,20 @@ paths:
       responses: {}
       tags:
       - beats
-  /beats/generate-presigned-url:
+  /beats/presigned-url/get:
+    post:
+      description: create presigned url to download beats (m4a audio file)
+      parameters:
+      - description: bottle info
+        in: body
+        name: bottles
+        required: true
+        schema:
+          $ref: '#/definitions/beat.Payload'
+      responses: {}
+      tags:
+      - beats
+  /beats/presigned-url/post:
     post:
       description: create presigned url to upload beats (m4a audio file)
       responses: {}

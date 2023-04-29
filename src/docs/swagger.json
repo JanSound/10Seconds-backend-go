@@ -33,13 +33,43 @@
                 "responses": {}
             }
         },
-        "/beats/generate-presigned-url": {
+        "/beats/presigned-url/get": {
+            "post": {
+                "description": "create presigned url to download beats (m4a audio file)",
+                "tags": [
+                    "beats"
+                ],
+                "parameters": [
+                    {
+                        "description": "bottle info",
+                        "name": "bottles",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/beat.Payload"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/beats/presigned-url/post": {
             "post": {
                 "description": "create presigned url to upload beats (m4a audio file)",
                 "tags": [
                     "beats"
                 ],
                 "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "beat.Payload": {
+            "type": "object",
+            "properties": {
+                "filename": {
+                    "type": "string"
+                }
             }
         }
     },
