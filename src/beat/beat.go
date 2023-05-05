@@ -18,14 +18,16 @@ type Beat struct {
 // @Tags beats
 // @Router /beats [post]
 func PostBeat(c *gin.Context) {
+	CreateBeat("test", "test2")
 	c.JSON(200, gin.H{
 		"message": "pong",
 	})
 }
 
 func GetBeatList(c *gin.Context) {
+	beats, _ := GetAllBeats()
 	c.JSON(200, gin.H{
-		"message": "pong",
+		"message": beats,
 	})
 }
 
