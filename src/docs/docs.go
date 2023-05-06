@@ -49,8 +49,8 @@ const docTemplate = `{
                 ],
                 "parameters": [
                     {
-                        "description": "bottle info",
-                        "name": "bottles",
+                        "description": "구하려는 파일의 key 를 넣어주세요.",
+                        "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -75,7 +75,7 @@ const docTemplate = `{
         "beat.Payload": {
             "type": "object",
             "properties": {
-                "filename": {
+                "key": {
                     "type": "string"
                 }
             }
@@ -102,6 +102,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "This is a sample server celler server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

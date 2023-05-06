@@ -2,7 +2,7 @@ basePath: /api/v1
 definitions:
   beat.Payload:
     properties:
-      filename:
+      key:
         type: string
     type: object
 externalDocs:
@@ -36,9 +36,9 @@ paths:
     post:
       description: create presigned url to download beats (m4a audio file)
       parameters:
-      - description: bottle info
+      - description: 구하려는 파일의 key 를 넣어주세요.
         in: body
-        name: bottles
+        name: body
         required: true
         schema:
           $ref: '#/definitions/beat.Payload'
