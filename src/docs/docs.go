@@ -61,7 +61,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/beats/presigned-url/post": {
+        "/beats/presigned-url/put": {
             "post": {
                 "description": "create presigned url to upload beats (m4a audio file)",
                 "tags": [

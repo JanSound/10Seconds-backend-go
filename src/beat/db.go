@@ -1,19 +1,26 @@
 package beat
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
+	"time"
+
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 // Beat 구조체 정의
 type BeatDTO struct {
-	ID       int
-	Key      string
-	BeatType string
+	ID           int
+	Key          string
+	BeatType     string
+	RegTs        time.Time
+	PresignedUrl string
 }
 
 func getDB() *sql.DB {
@@ -21,7 +28,7 @@ func getDB() *sql.DB {
 	database_password := os.Getenv("database_password")
 	database_name := os.Getenv("database_name")
 	source := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", database_user, database_password, database_name)
-	db, err := sql.Open("mysql", source)
+	db, err := sql.Open("mysql", source+"?parseTime=true")
 	if err != nil {
 		panic(err)
 	}
@@ -36,13 +43,13 @@ func CreateBeat(fileKey string, beatType string) {
 		BeatType: beatType,
 	}
 
-	stmt, err := db.Prepare("INSERT INTO `tenseconds`.`beat`(`key`, `beat_type`) VALUES(?, ?)")
+	stmt, err := db.Prepare("INSERT INTO `tenseconds`.`beat`(`key`, `beat_type`, `reg_ts`) VALUES(?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(beat.Key, beat.BeatType)
+	_, err = stmt.Exec(beat.Key, beat.BeatType, time.Now())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,19 +57,34 @@ func CreateBeat(fileKey string, beatType string) {
 
 func GetAllBeats() ([]BeatDTO, error) {
 	db := getDB()
-	rows, err := db.Query("SELECT `id`, `key`, beat_type FROM tenseconds.beat")
+	rows, err := db.Query("SELECT `id`, `key`, beat_type, reg_ts FROM tenseconds.beat")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	beats := []BeatDTO{}
+
+	cfg, err := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithSharedConfigProfile("tenseconds"),
+		config.WithRegion("ap-northeast-2"),
+	)
+	client := s3.NewFromConfig(cfg)
+	bucket := os.Getenv("aws_s3_bucket")
+
+	presignClient := s3.NewPresignClient(client)
+	presigner := Presigner{PresignClient: presignClient}
+
 	for rows.Next() {
 		beat := BeatDTO{}
-		err := rows.Scan(&beat.ID, &beat.Key, &beat.BeatType)
+		err := rows.Scan(&beat.ID, &beat.Key, &beat.BeatType, &beat.RegTs)
 		if err != nil {
 			return nil, err
 		}
+		presignedGetRequest, err := presigner.GetObject(bucket, beat.Key, 60)
+		presignedURL := presignedGetRequest.URL
+		beat.PresignedUrl = presignedURL
 		beats = append(beats, beat)
 	}
 

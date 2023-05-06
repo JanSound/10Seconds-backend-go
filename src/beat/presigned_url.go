@@ -81,14 +81,13 @@ func GenerateGetObjectPresignedUrl(c *gin.Context) {
 	}
 	var payload Payload
 	c.ShouldBind(&payload)
-	fileKey := payload.Key
-
 	client := s3.NewFromConfig(cfg)
 	bucket := os.Getenv("aws_s3_bucket")
 
 	presignClient := s3.NewPresignClient(client)
 	presigner := Presigner{PresignClient: presignClient}
 
+	fileKey := payload.Key
 	presignedGetRequest, err := presigner.GetObject(bucket, fileKey, 60)
 	presignedURL := presignedGetRequest.URL
 	c.JSON(200, gin.H{
@@ -99,7 +98,7 @@ func GenerateGetObjectPresignedUrl(c *gin.Context) {
 // @Schemes
 // @Description create presigned url to upload beats (m4a audio file)
 // @Tags beats
-// @Router /beats/presigned-url/post [post]
+// @Router /beats/presigned-url/put [post]
 func GeneratePutObjectPresignedURL(c *gin.Context) {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
