@@ -30,23 +30,14 @@
                 "tags": [
                     "beats"
                 ],
-                "responses": {}
-            }
-        },
-        "/beats/presigned-url/get": {
-            "post": {
-                "description": "create presigned url to download beats (m4a audio file)",
-                "tags": [
-                    "beats"
-                ],
                 "parameters": [
                     {
-                        "description": "구하려는 파일의 key 를 넣어주세요.",
+                        "description": "생성하려는 파일의 key와 beatType 를 넣어주세요.",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/beat.Payload"
+                            "$ref": "#/definitions/beat.BeatCreateDTO"
                         }
                     }
                 ],
@@ -64,9 +55,12 @@
         }
     },
     "definitions": {
-        "beat.Payload": {
+        "beat.BeatCreateDTO": {
             "type": "object",
             "properties": {
+                "beatType": {
+                    "type": "string"
+                },
                 "key": {
                     "type": "string"
                 }

@@ -64,11 +64,6 @@ func generateUniqueFilename() string {
 	return fmt.Sprintf("%s-%d", now.Format("20060102150405"), randomNumber)
 }
 
-// @Schemes
-// @Description create presigned url to download beats (m4a audio file)
-// @Tags beats
-// @Param body body Payload true "구하려는 파일의 key 를 넣어주세요."
-// @Router /beats/presigned-url/get [post]
 func GenerateGetObjectPresignedUrl(c *gin.Context) {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),

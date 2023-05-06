@@ -13,15 +13,21 @@ type Beat struct {
 	title string
 }
 
+type BeatCreateDTO struct {
+	Key      string
+	BeatType string
+}
+
 // @Schemes
 // @Description create beat
 // @Tags beats
+// @Param body body BeatCreateDTO true "생성하려는 파일의 key와 beatType 를 넣어주세요."
 // @Router /beats [post]
 func PostBeat(c *gin.Context) {
-	CreateBeat("test", "test2")
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
+	var payload BeatCreateDTO
+	c.ShouldBind(&payload)
+	CreateBeat(payload.Key, payload.BeatType)
+	c.JSON(201, gin.H{})
 }
 
 func GetBeatList(c *gin.Context) {

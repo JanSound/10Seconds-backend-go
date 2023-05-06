@@ -49,7 +49,7 @@ func main() {
 			presigned_url := beats.Group("presigned-url")
 			{
 				presigned_url.POST("put/", beat.GeneratePutObjectPresignedURL)
-				presigned_url.POST("get/", beat.GenerateGetObjectPresignedUrl)
+				// presigned_url.POST("get/", beat.GenerateGetObjectPresignedUrl)
 			}
 
 			beats.POST("", beat.PostBeat)

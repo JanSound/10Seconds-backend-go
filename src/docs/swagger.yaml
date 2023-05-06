@@ -1,7 +1,9 @@
 basePath: /api/v1
 definitions:
-  beat.Payload:
+  beat.BeatCreateDTO:
     properties:
+      beatType:
+        type: string
       key:
         type: string
     type: object
@@ -29,19 +31,13 @@ paths:
       - beats
     post:
       description: create beat
-      responses: {}
-      tags:
-      - beats
-  /beats/presigned-url/get:
-    post:
-      description: create presigned url to download beats (m4a audio file)
       parameters:
-      - description: 구하려는 파일의 key 를 넣어주세요.
+      - description: 생성하려는 파일의 key와 beatType 를 넣어주세요.
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/beat.Payload'
+          $ref: '#/definitions/beat.BeatCreateDTO'
       responses: {}
       tags:
       - beats
