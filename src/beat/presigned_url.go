@@ -35,6 +35,7 @@ func (presigner Presigner) GetObject(
 		opts.Expires = time.Duration(lifetimeSecs * int64(time.Second))
 	})
 	if err != nil {
+		fmt.Println(err)
 		log.Printf("Couldn't get a presigned request to get %v:%v. Here's why: %v\n",
 			bucketName, objectKey, err)
 	}
@@ -50,6 +51,7 @@ func (presigner Presigner) PutObject(
 		opts.Expires = time.Duration(lifetimeSecs * int64(time.Second))
 	})
 	if err != nil {
+		fmt.Println(err)
 		log.Printf("Couldn't get a presigned request to put %v:%v. Here's why: %v\n",
 			bucketName, objectKey, err)
 	}
@@ -72,6 +74,7 @@ func GenerateGetObjectPresignedUrl(c *gin.Context) {
 	)
 
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	var payload Payload
@@ -102,6 +105,7 @@ func GeneratePutObjectPresignedURL(c *gin.Context) {
 	)
 
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
@@ -115,6 +119,7 @@ func GeneratePutObjectPresignedURL(c *gin.Context) {
 	presignedPutRequest, err := presigner.PutObject(bucket, objectKey, 60)
 
 	if err != nil {
+		fmt.Println(err)
 		panic(err)
 	}
 

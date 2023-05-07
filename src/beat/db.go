@@ -30,6 +30,7 @@ func getDB() *sql.DB {
 	source := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", database_user, database_password, database_name)
 	db, err := sql.Open("mysql", source+"?parseTime=true")
 	if err != nil {
+		fmt.Println(err)
 		panic(err)
 	}
 	return db
@@ -45,12 +46,14 @@ func CreateBeat(fileKey string, beatType string) {
 
 	stmt, err := db.Prepare("INSERT INTO `tenseconds`.`beat`(`key`, `beat_type`, `reg_ts`) VALUES(?, ?, ?)")
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal(err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(beat.Key, beat.BeatType, time.Now())
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal(err)
 	}
 }
@@ -59,6 +62,7 @@ func GetAllBeats() ([]BeatDTO, error) {
 	db := getDB()
 	rows, err := db.Query("SELECT `id`, `key`, beat_type, reg_ts FROM tenseconds.beat")
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -80,6 +84,7 @@ func GetAllBeats() ([]BeatDTO, error) {
 		beat := BeatDTO{}
 		err := rows.Scan(&beat.ID, &beat.Key, &beat.BeatType, &beat.RegTs)
 		if err != nil {
+			fmt.Println(err)
 			return nil, err
 		}
 		presignedGetRequest, err := presigner.GetObject(bucket, beat.Key, 60)
@@ -90,8 +95,26 @@ func GetAllBeats() ([]BeatDTO, error) {
 
 	err = rows.Err()
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
 	return beats, nil
+}
+
+func DeleteBeatById(id int) {
+	db := getDB()
+
+	stmt, err := db.Prepare("DELETE FROM `tenseconds`.`beat` where `id` = ?")
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal(err)
+	}
 }

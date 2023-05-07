@@ -53,8 +53,8 @@ func GetBeatDetail(c *gin.Context) {
 // @Router /beats [get]
 func DeleteBeat(c *gin.Context) {
 	fmt.Println(c.Param("beat_id"))
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
+
+	DeleteBeatById(1)
+	c.JSON(200, gin.H{})
 
 }

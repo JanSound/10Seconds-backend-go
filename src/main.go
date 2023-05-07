@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/JanSound/10Seconds-backend-go/beat"
@@ -37,6 +38,7 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	if err != nil {
+		fmt.Println(err)
 		log.Fatal("Error loading .env5 file")
 	}
 
