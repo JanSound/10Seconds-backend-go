@@ -12,4 +12,4 @@ fi
 docker build -t "${IMAGE_NAME}" .
 
 # 새 컨테이너 실행
-docker run -d --name "${CONTAINER_NAME}" -p 8001:8001 "${IMAGE_NAME}"
+docker run -d --name "${CONTAINER_NAME}" -p 8001:8001 /home/ec2-user/.aws:/root/.aws "${IMAGE_NAME}"
