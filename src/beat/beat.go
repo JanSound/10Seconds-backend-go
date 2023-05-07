@@ -30,9 +30,7 @@ func PostBeat(c *gin.Context) {
 
 func GetBeatList(c *gin.Context) {
 	beats, _ := GetAllBeats()
-	c.JSON(200, gin.H{
-		"message": beats,
-	})
+	c.JSON(200, beats)
 }
 
 // @Schemes
