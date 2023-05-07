@@ -41,6 +41,18 @@ paths:
       responses: {}
       tags:
       - beats
+  /beats/{id}:
+    delete:
+      description: delete beat`
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      tags:
+      - beats
   /beats/presigned-url/put:
     post:
       description: create presigned url to upload beats (m4a audio file)

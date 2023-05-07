@@ -60,6 +60,24 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/beats/{id}": {
+            "delete": {
+                "description": "delete beat` + "`" + `",
+                "tags": [
+                    "beats"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {

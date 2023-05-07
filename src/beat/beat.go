@@ -1,8 +1,6 @@
 package beat
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -47,14 +45,17 @@ func GetBeatDetail(c *gin.Context) {
 	})
 }
 
+type User struct {
+	ID int `uri:"id" binding:"required,uuid"`
+}
+
 // @Schemes
-// @Description create beat
+// @Description delete beat`
 // @Tags beats
-// @Router /beats [get]
+// @Param        id   path      int  true  "user id"
+// @Router /beats/{id} [delete]
 func DeleteBeat(c *gin.Context) {
-	fmt.Println(c.Param("beat_id"))
-
-	DeleteBeatById(1)
+	user_id := c.Param("id")
+	DeleteBeatById(user_id)
 	c.JSON(200, gin.H{})
-
 }

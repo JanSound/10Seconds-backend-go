@@ -104,7 +104,7 @@ func GetAllBeats() ([]BeatDTO, error) {
 	return beats, nil
 }
 
-func DeleteBeatById(id int) {
+func DeleteBeatById(id string) {
 	db := getDB()
 
 	stmt, err := db.Prepare("DELETE FROM `tenseconds`.`beat` where `id` = ?")

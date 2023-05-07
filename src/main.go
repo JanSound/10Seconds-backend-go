@@ -57,7 +57,7 @@ func main() {
 			beats.POST("", beat.PostBeat)
 			beats.GET("", beat.GetBeatList)
 			beats.GET(":beat_id", beat.GetBeatDetail)
-			beats.DELETE(":beat_id", beat.DeleteBeat)
+			beats.DELETE(":id", beat.DeleteBeat)
 		}
 	}
 
