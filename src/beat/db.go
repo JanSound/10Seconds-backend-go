@@ -24,10 +24,11 @@ type BeatDTO struct {
 }
 
 func getDB() *sql.DB {
+	database_host := os.Getenv("database_host")
 	database_user := os.Getenv("database_user")
 	database_password := os.Getenv("database_password")
 	database_name := os.Getenv("database_name")
-	source := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", database_user, database_password, database_name)
+	source := fmt.Sprintf("%s:%s@tcp(%s)/%s", database_user, database_password, database_host, database_name)
 	db, err := sql.Open("mysql", source+"?parseTime=true")
 	fmt.Println("source is ... " + source)
 	if err != nil {
