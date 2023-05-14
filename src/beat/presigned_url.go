@@ -126,5 +126,6 @@ func GeneratePutObjectPresignedURL(c *gin.Context) {
 	presignedURL := presignedPutRequest.URL
 	c.JSON(200, gin.H{
 		"presigned_url": presignedURL,
+		"key":           objectKey,
 	})
 }
