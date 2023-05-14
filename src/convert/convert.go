@@ -41,9 +41,9 @@ func convertBeat(key string) []ConvertedBeatDTO {
 	tempPresignedUrl := getPresignedUrl(key)
 
 	beatList := []ConvertedBeatDTO{
-		{Key: key, BeatType: "guitar", PresignedUrl: tempPresignedUrl},
-		{Key: key, BeatType: "base", PresignedUrl: tempPresignedUrl},
-		{Key: key, BeatType: "drum", PresignedUrl: tempPresignedUrl},
+		{Key: key + "g1", BeatType: "guitar", PresignedUrl: tempPresignedUrl},
+		{Key: key + "b1", BeatType: "base", PresignedUrl: tempPresignedUrl},
+		{Key: key + "d1", BeatType: "drum", PresignedUrl: tempPresignedUrl},
 	}
 
 	return beatList
