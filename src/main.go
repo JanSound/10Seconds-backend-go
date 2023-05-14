@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/JanSound/10Seconds-backend-go/beat"
+	"github.com/JanSound/10Seconds-backend-go/convert"
 	docs "github.com/JanSound/10Seconds-backend-go/docs"
 	swaggerFiles "github.com/swaggo/files"
 
@@ -58,6 +59,11 @@ func main() {
 			beats.GET("", beat.GetBeatList)
 			beats.GET(":beat_id", beat.GetBeatDetail)
 			beats.DELETE(":id", beat.DeleteBeat)
+		}
+
+		convertBeat := v1.Group("convert-beat")
+		{
+			convertBeat.POST("", convert.ConvertBeat)
 		}
 	}
 

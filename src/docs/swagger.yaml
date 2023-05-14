@@ -7,6 +7,11 @@ definitions:
       key:
         type: string
     type: object
+  convert.BeatConvertDTO:
+    properties:
+      key:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -59,6 +64,19 @@ paths:
       responses: {}
       tags:
       - beats
+  /convert-beat:
+    post:
+      description: convert beat
+      parameters:
+      - description: 변환하려는 파일의 key 를 입력해주세요.
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/convert.BeatConvertDTO'
+      responses: {}
+      tags:
+      - convert
 securityDefinitions:
   BasicAuth:
     type: basic

@@ -78,6 +78,26 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/convert-beat": {
+            "post": {
+                "description": "convert beat",
+                "tags": [
+                    "convert"
+                ],
+                "parameters": [
+                    {
+                        "description": "변환하려는 파일의 key 를 입력해주세요.",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/convert.BeatConvertDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
@@ -87,6 +107,14 @@ const docTemplate = `{
                 "beatType": {
                     "type": "string"
                 },
+                "key": {
+                    "type": "string"
+                }
+            }
+        },
+        "convert.BeatConvertDTO": {
+            "type": "object",
+            "properties": {
                 "key": {
                     "type": "string"
                 }
