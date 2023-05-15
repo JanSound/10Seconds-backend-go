@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/JanSound/10Seconds-backend-go/beat"
 	"github.com/JanSound/10Seconds-backend-go/convert"
@@ -40,7 +39,6 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal("Error loading .env5 file")
 	}
 
 	r := gin.Default()

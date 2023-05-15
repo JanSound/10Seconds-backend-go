@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -48,14 +47,12 @@ func CreateBeat(fileKey string, beatType string) {
 	stmt, err := db.Prepare("INSERT INTO `tenseconds`.`beat`(`key`, `beat_type`, `reg_ts`) VALUES(?, ?, ?)")
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal(err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(beat.Key, beat.BeatType, time.Now())
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal(err)
 	}
 }
 
@@ -109,13 +106,11 @@ func DeleteBeatById(id string) {
 	stmt, err := db.Prepare("DELETE FROM `tenseconds`.`beat` where `id` = ?")
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal(err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(id)
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal(err)
 	}
 }

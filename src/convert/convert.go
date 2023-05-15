@@ -3,7 +3,6 @@ package convert
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/JanSound/10Seconds-backend-go/beat"
@@ -57,7 +56,6 @@ func getPresignedUrl(key string) string {
 	)
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal(err)
 	}
 	client := s3.NewFromConfig(cfg)
 	bucket := os.Getenv("aws_s3_bucket")
@@ -68,7 +66,6 @@ func getPresignedUrl(key string) string {
 	presignedGetRequest, err := presigner.GetObject(bucket, key, 60)
 	if err != nil {
 		fmt.Println(err)
-		log.Fatal(err)
 	}
 	presignedURL := presignedGetRequest.URL
 	return presignedURL
