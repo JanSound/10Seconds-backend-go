@@ -120,7 +120,6 @@ func GeneratePutObjectPresignedURL(c *gin.Context) {
 
 	if err != nil {
 		fmt.Println(err)
-		panic(err)
 	}
 
 	presignedURL := presignedPutRequest.URL

@@ -33,7 +33,6 @@ func getDB() *sql.DB {
 	fmt.Println("source is ... " + source)
 	if err != nil {
 		fmt.Println(err)
-		panic(err)
 	}
 	return db
 }
