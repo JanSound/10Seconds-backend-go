@@ -114,3 +114,18 @@ func DeleteBeatById(id string) {
 		fmt.Println(err)
 	}
 }
+
+func DeleteAll() {
+	db := getDB()
+
+	stmt, err := db.Prepare("DELETE FROM `tenseconds`.`beat` where `id` is not null")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec()
+	if err != nil {
+		fmt.Println(err)
+	}
+}

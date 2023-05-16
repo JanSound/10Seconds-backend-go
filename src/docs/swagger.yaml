@@ -58,6 +58,12 @@ paths:
       responses: {}
       tags:
       - beats
+  /beats/all:
+    delete:
+      description: 모든 데이터를 삭제합니다`
+      responses: {}
+      tags:
+      - beats
   /beats/presigned-url/put:
     post:
       description: create presigned url to upload beats (m4a audio file)

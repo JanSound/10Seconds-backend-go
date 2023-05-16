@@ -52,6 +52,15 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/beats/all": {
+            "delete": {
+                "description": "모든 데이터를 삭제합니다` + "`" + `",
+                "tags": [
+                    "beats"
+                ],
+                "responses": {}
+            }
+        },
         "/beats/presigned-url/put": {
             "post": {
                 "description": "create presigned url to upload beats (m4a audio file)",
@@ -142,8 +151,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "This is a sample server celler server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {

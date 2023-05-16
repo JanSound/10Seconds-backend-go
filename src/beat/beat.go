@@ -57,3 +57,12 @@ func DeleteBeat(c *gin.Context) {
 	DeleteBeatById(user_id)
 	c.JSON(200, gin.H{})
 }
+
+// @Schemes
+// @Description 모든 데이터를 삭제합니다`
+// @Tags beats
+// @Router /beats/all [delete]
+func DeleteAllBeat(c *gin.Context) {
+	DeleteAll()
+	c.JSON(200, gin.H{})
+}
