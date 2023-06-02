@@ -6,6 +6,7 @@ import (
 	"github.com/JanSound/10Seconds-backend-go/beat"
 	"github.com/JanSound/10Seconds-backend-go/convert"
 	docs "github.com/JanSound/10Seconds-backend-go/docs"
+	"github.com/JanSound/10Seconds-backend-go/stack"
 	swaggerFiles "github.com/swaggo/files"
 
 	"github.com/gin-gonic/gin"
@@ -63,6 +64,11 @@ func main() {
 		convertBeat := v1.Group("convert-beat")
 		{
 			convertBeat.POST("", convert.ConvertBeat)
+		}
+
+		stackBeat := v1.Group("stack-beat")
+		{
+			stackBeat.POST("", stack.StackBeat)
 		}
 	}
 
