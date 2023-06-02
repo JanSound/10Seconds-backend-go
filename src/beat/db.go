@@ -112,6 +112,7 @@ func DeleteBeatById(id string) {
 	_, err = stmt.Exec(id)
 	if err != nil {
 		fmt.Println(err)
+
 	}
 }
 

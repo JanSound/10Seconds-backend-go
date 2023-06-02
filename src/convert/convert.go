@@ -41,12 +41,12 @@ func convertBeat(key string) []ConvertedBeatDTO {
 	// TODO(@shmoon): 음성 처리 서버로부터 3개의 응답 받아오기
 
 	convert(key)
-	presignedUrlList := getPresignedUrl(key)
+	presignedUrlList := getPresignedUrlList(key)
 
 	beatList := []ConvertedBeatDTO{
-		{Key: key, BeatType: "base", PresignedUrl: presignedUrlList[0]},
-		{Key: key, BeatType: "piano", PresignedUrl: presignedUrlList[1]},
-		{Key: key, BeatType: "drum", PresignedUrl: presignedUrlList[2]},
+		{Key: "beat/bass/" + key + ".m4a", BeatType: "bass", PresignedUrl: presignedUrlList[0]},
+		{Key: "beat/piano/" + key + ".m4a", BeatType: "piano", PresignedUrl: presignedUrlList[1]},
+		{Key: "beat/drum/" + key + ".m4a", BeatType: "drum", PresignedUrl: presignedUrlList[2]},
 	}
 
 	return beatList
@@ -92,7 +92,7 @@ func convert(key string) {
 
 }
 
-func getPresignedUrl(key string) []string {
+func getPresignedUrlList(key string) []string {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
 		config.WithSharedConfigProfile("tenseconds"),
@@ -105,9 +105,9 @@ func getPresignedUrl(key string) []string {
 	bucket := os.Getenv("aws_s3_bucket")
 
 	ret := []string{}
-	myList := []string{"base", "piano", "drum"}
+	myList := []string{"bass", "piano", "drum"}
 	for _, value := range myList {
-		url := value + "/" + key
+		url := "beat/" + value + "/" + key + ".m4a"
 		presignClient := s3.NewPresignClient(client)
 		presigner := beat.Presigner{PresignClient: presignClient}
 
