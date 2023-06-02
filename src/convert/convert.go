@@ -25,6 +25,11 @@ type ConvertedBeatDTO struct {
 	PresignedUrl string
 }
 
+// @Schemes
+// @Description convert beat
+// @Tags convert
+// @Param body body BeatConvertDTO true "변환하려는 파일의 key 를 입력해주세요."
+// @Router /convert-beat [post]
 func ConvertBeat(c *gin.Context) {
 	var payload BeatConvertDTO
 	c.ShouldBind(&payload)
@@ -32,11 +37,6 @@ func ConvertBeat(c *gin.Context) {
 	c.JSON(200, beats)
 }
 
-// @Schemes
-// @Description convert beat
-// @Tags convert
-// @Param body body BeatConvertDTO true "변환하려는 파일의 key 를 입력해주세요."
-// @Router /convert-beat [post]
 func convertBeat(key string) []ConvertedBeatDTO {
 	// TODO(@shmoon): 음성 처리 서버로부터 3개의 응답 받아오기
 
@@ -44,9 +44,9 @@ func convertBeat(key string) []ConvertedBeatDTO {
 	presignedUrlList := getPresignedUrlList(key)
 
 	beatList := []ConvertedBeatDTO{
-		{Key: "beat/bass/" + key + ".m4a", BeatType: "bass", PresignedUrl: presignedUrlList[0]},
-		{Key: "beat/piano/" + key + ".m4a", BeatType: "piano", PresignedUrl: presignedUrlList[1]},
-		{Key: "beat/drum/" + key + ".m4a", BeatType: "drum", PresignedUrl: presignedUrlList[2]},
+		{Key: "beat/bass/" + key, BeatType: "bass", PresignedUrl: presignedUrlList[0]},
+		{Key: "beat/piano/" + key, BeatType: "piano", PresignedUrl: presignedUrlList[1]},
+		{Key: "beat/drum/" + key, BeatType: "drum", PresignedUrl: presignedUrlList[2]},
 	}
 
 	return beatList

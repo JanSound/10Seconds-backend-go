@@ -107,6 +107,29 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/stack-beat": {
+            "post": {
+                "description": "stack beat",
+                "tags": [
+                    "stack"
+                ],
+                "parameters": [
+                    {
+                        "description": "병합하려는 key 들의 리스트를 입력해주세요.",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/stack.BeatStackDTO"
+                            }
+                        }
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
@@ -122,6 +145,14 @@ const docTemplate = `{
             }
         },
         "convert.BeatConvertDTO": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                }
+            }
+        },
+        "stack.BeatStackDTO": {
             "type": "object",
             "properties": {
                 "key": {
@@ -151,6 +182,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "This is a sample server celler server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {
