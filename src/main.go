@@ -58,7 +58,7 @@ func main() {
 			beats.GET("", beat.GetBeatList)
 			beats.GET(":beat_id", beat.GetBeatDetail)
 			beats.DELETE(":id", beat.DeleteBeat)
-			beats.DELETE("all", beat.DeleteBeat)
+			beats.DELETE("all", beat.DeleteAllBeat)
 		}
 
 		convertBeat := v1.Group("convert-beat")

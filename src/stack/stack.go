@@ -41,7 +41,6 @@ func stack(stacks []BeatStackDTO) {
 	url := os.Getenv("core_host") + "/beats/stack"
 	var data []map[string]interface{}
 	for _, value := range stacks {
-
 		replacedKey := strings.Replace(value.Key, "beat/", "", -1)
 		substrings := strings.Split(replacedKey, "/")
 		// TODO(@shmoon): 정의한 인터페이스로 수정

@@ -58,9 +58,13 @@ type ConvertDTO struct {
 
 func convert(key string) {
 	url := os.Getenv("core_host") + "/beats/convert"
-	data := ConvertDTO{
-		filename: key,
+	var data map[string]string
+	data = map[string]string{
+		"filename": key,
 	}
+	// data := ConvertDTO{
+	// 	filename: key,
+	// }
 
 	payload, err := json.Marshal(data)
 	if err != nil {
@@ -108,8 +112,8 @@ func getPresignedUrlList(key string) []string {
 	myList := []string{"bass", "piano", "drum"}
 	for _, value := range myList {
 		url := "beat/" + value + "/" + key + ".m4a"
-		presignClient := s3.NewPresignClient(client)
-		presigner := beat.Presigner{PresignClient: presignClient}
+		presignedClient := s3.NewPresignClient(client)
+		presigner := beat.Presigner{PresignClient: presignedClient}
 
 		presignedGetRequest, err := presigner.GetObject(bucket, url, 60)
 		if err != nil {
