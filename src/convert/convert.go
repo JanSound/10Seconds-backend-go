@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/JanSound/10Seconds-backend-go/beat"
 
@@ -97,6 +98,9 @@ func convert(key string) {
 }
 
 func getPresignedUrlList(key string) []string {
+	// 임시 로직
+	replacedKey := strings.Replace(key, ".m4a", "", -1)
+
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
 		config.WithSharedConfigProfile("tenseconds"),
@@ -111,7 +115,7 @@ func getPresignedUrlList(key string) []string {
 	ret := []string{}
 	myList := []string{"bass", "piano", "drum"}
 	for _, value := range myList {
-		url := "beat/" + value + "/" + key + ".m4a"
+		url := "beat/" + value + "/" + replacedKey + ".m4a"
 		presignedClient := s3.NewPresignClient(client)
 		presigner := beat.Presigner{PresignClient: presignedClient}
 
