@@ -29,13 +29,7 @@ func StackBeat(c *gin.Context) {
 		return
 	}
 	stack(stacks)
-
 	c.JSON(200, gin.H{})
-}
-
-func getStackResultFilename(stacks []BeatStackDTO) string {
-
-	return ""
 }
 
 type StackDTO struct {
@@ -45,14 +39,16 @@ type StackDTO struct {
 
 func stack(stacks []BeatStackDTO) {
 	url := os.Getenv("core_host") + "/beats/stack"
-	var data []StackDTO
+	var data []map[string]interface{}
 	for _, value := range stacks {
 
-		replacedKey := strings.Replace(value.Key, "beats/", "", -1)
+		replacedKey := strings.Replace(value.Key, "beat/", "", -1)
 		substrings := strings.Split(replacedKey, "/")
-		data = append(data, StackDTO{
-			Filename: substrings[0],
-			Type:     substrings[1],
+		// TODO(@shmoon): 정의한 인터페이스로 수정
+		filename := strings.Replace(substrings[1], ".m4a", "", -1)
+		data = append(data, map[string]interface{}{
+			"filename": filename,
+			"type":     substrings[0],
 		})
 	}
 
@@ -61,28 +57,16 @@ func stack(stacks []BeatStackDTO) {
 		fmt.Println("Error marshaling JSON:", err)
 		return
 	}
-
-	// Create a request with the JSON payload
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
-	}
-
-	// Set the content type header
-	req.Header.Set("Content-Type", "application/json")
-
-	// Make the request
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := http.Post(
+		url,
+		"application/json",
+		bytes.NewBuffer(payload),
+	)
 	if err != nil {
 		fmt.Println("Error making request:", err)
 		return
 	}
 	defer resp.Body.Close()
-
-	// Check the response status code
-	fmt.Println("Response status code:", resp.StatusCode)
 }
 
 func uploadStackBeat(input string) {
