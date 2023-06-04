@@ -59,6 +59,10 @@ type ConvertDTO struct {
 
 func convert(key string) {
 	url := os.Getenv("core_host") + "/beats/convert"
+
+	key = strings.Replace(key, "voice/", "", -1)
+	key = strings.Replace(key, ".m4a", "", -1)
+
 	var data map[string]string
 	data = map[string]string{
 		"filename": key,
