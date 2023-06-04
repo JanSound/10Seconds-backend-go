@@ -43,11 +43,11 @@ func convertBeat(key string) []ConvertedBeatDTO {
 
 	convert(key)
 	presignedUrlList := getPresignedUrlList(key)
-
+	replacedKey := strings.Replace(key, "voice/", "", -1)
 	beatList := []ConvertedBeatDTO{
-		{Key: "beat/bass/" + key, BeatType: "bass", PresignedUrl: presignedUrlList[0]},
-		{Key: "beat/piano/" + key, BeatType: "piano", PresignedUrl: presignedUrlList[1]},
-		{Key: "beat/drum/" + key, BeatType: "drum", PresignedUrl: presignedUrlList[2]},
+		{Key: "beat/bass/" + replacedKey, BeatType: "bass", PresignedUrl: presignedUrlList[0]},
+		{Key: "beat/piano/" + replacedKey, BeatType: "piano", PresignedUrl: presignedUrlList[1]},
+		{Key: "beat/drum/" + replacedKey, BeatType: "drum", PresignedUrl: presignedUrlList[2]},
 	}
 
 	return beatList
@@ -99,7 +99,8 @@ func convert(key string) {
 
 func getPresignedUrlList(key string) []string {
 	// 임시 로직
-	replacedKey := strings.Replace(key, ".m4a", "", -1)
+	replacedKey := strings.Replace(key, "voice/", "", -1)
+	replacedKey = strings.Replace(replacedKey, ".m4a", "", -1)
 
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),

@@ -67,7 +67,3 @@ func stack(stacks []BeatStackDTO) {
 	}
 	defer resp.Body.Close()
 }
-
-func uploadStackBeat(input string) {
-
-}
