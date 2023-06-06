@@ -3,11 +3,13 @@ package stack
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"errors"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
 
+	"github.com/JanSound/10Seconds-backend-go/beat"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,7 +30,11 @@ func StackBeat(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	stack(stacks)
+	err := stack(stacks)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	c.JSON(200, gin.H{})
 }
 
@@ -37,7 +43,7 @@ type StackDTO struct {
 	Type     string
 }
 
-func stack(stacks []BeatStackDTO) {
+func stack(stacks []BeatStackDTO) error {
 	url := os.Getenv("core_host") + "/beats/stack"
 	var data []map[string]interface{}
 	for _, value := range stacks {
@@ -53,8 +59,7 @@ func stack(stacks []BeatStackDTO) {
 
 	payload, err := json.Marshal(data)
 	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return
+		return errors.New("error marshaling json")
 	}
 	resp, err := http.Post(
 		url,
@@ -62,8 +67,19 @@ func stack(stacks []BeatStackDTO) {
 		bytes.NewBuffer(payload),
 	)
 	if err != nil {
-		fmt.Println("Error making request:", err)
-		return
+		return errors.New("error making request")
 	}
+
+	if resp.StatusCode == 400 {
+		body, _ := ioutil.ReadAll(resp.Body)
+		return errors.New(string(body))
+	}
+
+	stackFilename, _ := ioutil.ReadAll(resp.Body)
+	beat.CreateBeat(string(stackFilename), "stack")
+
 	defer resp.Body.Close()
+	return nil
 }
+
+func addStackBeat()
