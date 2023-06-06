@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/JanSound/10Seconds-backend-go/beat"
@@ -70,16 +71,19 @@ func stack(stacks []BeatStackDTO) error {
 		return errors.New("error making request")
 	}
 
-	if resp.StatusCode == 400 {
+	if resp.StatusCode != 200 {
 		body, _ := ioutil.ReadAll(resp.Body)
 		return errors.New(string(body))
 	}
 
 	stackFilename, _ := ioutil.ReadAll(resp.Body)
-	beat.CreateBeat(string(stackFilename), "stack")
 
+	unquotedFileName, err := strconv.Unquote(string(stackFilename))
+	if err != nil {
+		return err
+	}
+	filename := "beat/stack/" + unquotedFileName + ".m4a"
+	beat.CreateBeat(string(filename), "stack")
 	defer resp.Body.Close()
 	return nil
 }
-
-func addStackBeat()

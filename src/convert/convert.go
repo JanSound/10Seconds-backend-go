@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -34,14 +36,20 @@ type ConvertedBeatDTO struct {
 func ConvertBeat(c *gin.Context) {
 	var payload BeatConvertDTO
 	c.ShouldBind(&payload)
-	beats := convertBeat(payload.Key)
+	beats, err := convertBeat(payload.Key)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
 	c.JSON(200, beats)
 }
 
-func convertBeat(key string) []ConvertedBeatDTO {
+func convertBeat(key string) ([]ConvertedBeatDTO, error) {
 	// TODO(@shmoon): 음성 처리 서버로부터 3개의 응답 받아오기
 
-	convert(key)
+	err := convert(key)
+	if err != nil {
+		return nil, err
+	}
 	presignedUrlList := getPresignedUrlList(key)
 	replacedKey := strings.Replace(key, "voice/", "", -1)
 	beatList := []ConvertedBeatDTO{
@@ -49,39 +57,28 @@ func convertBeat(key string) []ConvertedBeatDTO {
 		{Key: "beat/piano/" + replacedKey, BeatType: "piano", PresignedUrl: presignedUrlList[1]},
 		{Key: "beat/drum/" + replacedKey, BeatType: "drum", PresignedUrl: presignedUrlList[2]},
 	}
-
-	return beatList
+	return beatList, nil
 }
 
-type ConvertDTO struct {
-	filename string
-}
-
-func convert(key string) {
+func convert(key string) error {
 	url := os.Getenv("core_host") + "/beats/convert"
 
 	key = strings.Replace(key, "voice/", "", -1)
 	key = strings.Replace(key, ".m4a", "", -1)
 
-	var data map[string]string
-	data = map[string]string{
+	var data map[string]string = map[string]string{
 		"filename": key,
 	}
-	// data := ConvertDTO{
-	// 	filename: key,
-	// }
 
 	payload, err := json.Marshal(data)
 	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return
+		return err
 	}
 
 	// Create a request with the JSON payload
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
 	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return
+		return err
 	}
 
 	// Set the content type header
@@ -91,14 +88,17 @@ func convert(key string) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("Error making request:", err)
-		return
+		return err
 	}
 	defer resp.Body.Close()
 
 	// Check the response status code
-	fmt.Println("Response status code:", resp.StatusCode)
+	if resp.StatusCode != 200 {
+		body, _ := ioutil.ReadAll(resp.Body)
+		return errors.New(string(body))
+	}
 
+	return nil
 }
 
 func getPresignedUrlList(key string) []string {
@@ -129,7 +129,6 @@ func getPresignedUrlList(key string) []string {
 			fmt.Println(err)
 		}
 		ret = append(ret, presignedGetRequest.URL)
-
 	}
 	return ret
 }
